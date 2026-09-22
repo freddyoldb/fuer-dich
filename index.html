@@ -393,8 +393,8 @@
             const heartMat = new THREE.MeshStandardMaterial({ color: 0xe11d48, roughness: 0.2, metalness: 0.1 });
             const mesh = new THREE.Mesh(heartGeo, heartMat);
             mesh.scale.set(0.6, 0.6, 0.6);
-            // Herz ist jetzt richtig herum gedreht (Z-Rotation entfernt)
-            mesh.rotation.z = 0;
+            // Herz korrekt aufrecht gedreht (Rücksetzung auf Math.PI, damit die Bögen oben und die Spitze unten sind)
+            mesh.rotation.z = Math.PI;
             return mesh;
         }
         const heartMesh = createHeart();
