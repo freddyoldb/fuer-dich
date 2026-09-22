@@ -335,7 +335,6 @@
         function createCheese() {
             const group = new THREE.Group();
             
-            // Clean glatter Käse-Keil ohne jegliche Löcher oder Klötze
             const shape = new THREE.Shape();
             const r = 1.8;
             const a = Math.PI / 2.5;
@@ -394,7 +393,8 @@
             const heartMat = new THREE.MeshStandardMaterial({ color: 0xe11d48, roughness: 0.2, metalness: 0.1 });
             const mesh = new THREE.Mesh(heartGeo, heartMat);
             mesh.scale.set(0.6, 0.6, 0.6);
-            mesh.rotation.z = Math.PI;
+            // Herz ist jetzt richtig herum gedreht (Z-Rotation entfernt)
+            mesh.rotation.z = 0;
             return mesh;
         }
         const heartMesh = createHeart();
