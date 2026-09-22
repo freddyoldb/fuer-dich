@@ -88,9 +88,15 @@
                 <h1 class="text-4xl md:text-6xl font-extrabold text-rose-950 mb-4 tracking-tight">
                     Unsere <span class="font-serif-italic font-normal text-rose-600">Reise</span>
                 </h1>
-                <p class="text-rose-800 text-sm md:text-base font-medium mb-8">
+                <p class="text-rose-800 text-sm md:text-base font-medium mb-6">
                     Drehe am Scrollrad, um durch unsere gemeinsamen Erinnerungen und die Zukunft zu reisen.
                 </p>
+                
+                <!-- Live Counter Badge -->
+                <div class="inline-block bg-rose-100/90 border border-rose-200 px-4 py-2 rounded-2xl text-xs font-semibold text-rose-800 mb-6 shadow-inner">
+                    ✨ Wir sind schon <span id="daysTogether" class="font-bold text-rose-600">...</span> Tage unzertrennlich ❤️
+                </div>
+
                 <div class="animate-bounce flex flex-col items-center text-rose-500">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
@@ -132,6 +138,16 @@
             </div>
         </section>
 
+        <!-- Station: Das Baumhaus-Abenteuer (NEU) -->
+        <section class="h-screen flex items-center justify-center p-4">
+            <div class="glass-card p-8 rounded-3xl max-w-md w-full text-center">
+                <div class="text-5xl mb-3 filter drop-shadow">🌿🪢</div>
+                <div class="text-rose-500 font-bold text-xs tracking-widest uppercase mb-1">Sommer-Vibes</div>
+                <h2 class="text-2xl font-extrabold text-rose-950">Unser Baumhaus</h2>
+                <p class="text-rose-700/80 text-sm mt-2">Unzählige Stunden, Seile, Umbau-Aktionen und perfekte Sommernachmittage.</p>
+            </div>
+        </section>
+
         <!-- Station 2: Vorletzter Abend -->
         <section class="h-screen flex items-center justify-center p-4">
             <div class="glass-card p-8 rounded-3xl max-w-md w-full text-center">
@@ -154,6 +170,16 @@
                 <button onclick="nextReason()" class="px-5 py-2.5 bg-rose-500 hover:bg-rose-600 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-md transition-all">
                     Nächster Grund ✨
                 </button>
+            </div>
+        </section>
+
+        <!-- Station: Gemeinsame Lieblingsmomente (NEU) -->
+        <section class="h-screen flex items-center justify-center p-4">
+            <div class="glass-card p-8 rounded-3xl max-w-md w-full text-center">
+                <div class="text-5xl mb-3 filter drop-shadow">🎵✨</div>
+                <div class="text-rose-500 font-bold text-xs tracking-widest uppercase mb-1">Unvergesslich</div>
+                <h2 class="text-2xl font-extrabold text-rose-950">Kleine Momente</h2>
+                <p class="text-rose-700/80 text-sm mt-2">Gute Musik auf den Ohren, endlose Gespräche und einfach das Gefühl, am richtigen Ort zu sein.</p>
             </div>
         </section>
 
@@ -265,6 +291,19 @@
     </div>
 
     <script>
+        // --- LIVE TAGE-ZÄHLER (Berechnet ab dem 16.07.2026) ---
+        function updateDaysCounter() {
+            const startDate = new Date('2026-07-16');
+            const today = new Date();
+            const diffTime = today - startDate;
+            const diffDays = Math.max(0, Math.floor(diffTime / (1000 * 60 * 60 * 24)));
+            const counterEl = document.getElementById('daysTogether');
+            if(counterEl) {
+                counterEl.innerText = diffDays;
+            }
+        }
+        updateDaysCounter();
+
         // --- FOTO-GALERIE LOGIK ---
         const galleryImages = [
             "https://i.ibb.co/SD6pGSq7/bild.jpg", 
@@ -318,14 +357,14 @@
         dirLight.position.set(10, 20, 10);
         scene.add(dirLight);
 
-        const particleCount = 300;
+        const particleCount = 400; // Etwas mehr Partikel für die längere Reise
         const particleGeo = new THREE.BufferGeometry();
         const particlePos = new Float32Array(particleCount * 3);
 
         for(let i = 0; i < particleCount * 3; i += 3) {
             particlePos[i] = (Math.random() - 0.5) * 70;
             particlePos[i+1] = (Math.random() - 0.5) * 70;
-            particlePos[i+2] = -Math.random() * 250;
+            particlePos[i+2] = -Math.random() * 300; // Längeres Feld für mehr Stationen
         }
         particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePos, 3));
         const particleMat = new THREE.PointsMaterial({ color: 0xf472b6, size: 0.3, transparent: true, opacity: 0.6 });
@@ -393,7 +432,6 @@
             const heartMat = new THREE.MeshStandardMaterial({ color: 0xe11d48, roughness: 0.2, metalness: 0.1 });
             const mesh = new THREE.Mesh(heartGeo, heartMat);
             mesh.scale.set(0.6, 0.6, 0.6);
-            // Herz korrekt aufrecht gedreht (Rücksetzung auf Math.PI, damit die Bögen oben und die Spitze unten sind)
             mesh.rotation.z = Math.PI;
             return mesh;
         }
@@ -435,7 +473,7 @@
             return group;
         }
         const ringsMesh = createRings();
-        ringsMesh.position.set(0, 0, -165);
+        ringsMesh.position.set(0, 0, -200); // Weiter nach hinten gesetzt für die längere Sektion
         scene.add(ringsMesh);
 
         let scrollProgress = 0;
@@ -468,7 +506,7 @@
 
             ringsMesh.rotation.y += 0.01;
 
-            const totalZSpan = isLocked ? 75 : 180;
+            const totalZSpan = isLocked ? 75 : 220; // Angepasst an die veränderte Streckenlänge
             const targetCamZ = -scrollProgress * totalZSpan;
             camera.position.z += (targetCamZ - camera.position.z) * 0.08;
             camera.position.y = Math.sin(scrollProgress * Math.PI * 2) * 0.3;
