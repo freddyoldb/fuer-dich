@@ -335,7 +335,7 @@
         function createCheese() {
             const group = new THREE.Group();
             
-            // Sauberer Käsestück-Keil (kompakt ohne fremde Kugeln)
+            // Hauptkeil des Käses
             const shape = new THREE.Shape();
             const r = 1.8;
             const a = Math.PI / 2.5;
@@ -349,6 +349,24 @@
             const wedge = new THREE.Mesh(wedgeGeo, wedgeMat);
             wedge.rotation.x = -Math.PI / 2;
             group.add(wedge);
+
+            // Echte Löcher (eingelassene dunklere Mulden im Käse)
+            const holeMat = new THREE.MeshStandardMaterial({ color: 0xca8a04, roughness: 0.9 });
+            const holePositions = [
+                { x: 0.5, y: 0.3, z: 0.61 },
+                { x: -0.4, y: -0.2, z: 0.61 },
+                { x: 0.2, y: -0.4, z: 0.61 },
+                { x: 1.0, y: 0.1, z: 0 },
+                { x: -0.8, y: 0.2, z: -0.3 }
+            ];
+
+            holePositions.forEach(pos => {
+                const holeGeo = new THREE.SphereGeometry(0.18, 16, 16);
+                const hole = new THREE.Mesh(holeGeo, holeMat);
+                hole.position.set(pos.x, pos.y, pos.z);
+                hole.scale.set(1, 1, 0.4); // Abgeflacht als Vertiefung
+                group.add(hole);
+            });
 
             return group;
         }
