@@ -45,6 +45,12 @@
             box-shadow: 0 20px 40px rgba(244, 63, 94, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04);
         }
 
+        /* Schärfere Bildwiedergabe gegen Verpixelung */
+        #galleryImage {
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+        }
+
         @keyframes spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
@@ -116,7 +122,7 @@
                 
                 <!-- Foto-Container -->
                 <div class="rounded-2xl overflow-hidden shadow-lg border-2 border-white mb-4 bg-rose-100 flex items-center justify-center relative">
-                    <img id="galleryImage" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1200&q=80" alt="Foto Galerie" class="w-full h-auto object-contain max-h-[45vh] transition-opacity duration-300">
+                    <img id="galleryImage" src="https://i.ibb.co/SD6pGSq7/bild.jpg" alt="Foto Galerie" class="w-full h-auto object-contain max-h-[45vh] transition-opacity duration-300">
                 </div>
 
                 <!-- Navigations-Buttons -->
@@ -265,11 +271,11 @@
     </div>
 
     <script>
-        // --- FOTO-GALERIE LOGIK (Hochauflösende Unsplash-Bilder) ---
+        // --- FOTO-GALERIE LOGIK ---
         const galleryImages = [
-            "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1200&q=80",
-            "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80",
-            "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=1200&q=80"
+            "https://i.ibb.co/SD6pGSq7/bild.jpg", 
+            "https://i.ibb.co/wFNS2bmY/bild.jpg", 
+            "https://i.ibb.co/rGK4Y54K/bild.jpg"  
         ];
         let currentImageIndex = 0;
 
