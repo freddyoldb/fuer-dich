@@ -1,482 +1,547 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unsere gemeinsame Reise ❤️</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Three.js for 3D Graphics -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
-    
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #fbeef1 0%, #f8d7da 100%);
-            color: #4c0519;
-            margin: 0;
-            overflow-x: hidden;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unsere Reise ❤️</title>
+  <style>
+    :root {
+      --bg-color: #fbebf1;
+      --card-bg: rgba(255, 255, 255, 0.82);
+      --primary: #e63946;
+      --primary-hover: #d62828;
+      --text-color: #333333;
+      --accent: #ff4d6d;
+    }
 
-        .font-serif-italic {
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
 
-        #webgl-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 0;
-            pointer-events: none;
-        }
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.65);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.9);
-            box-shadow: 0 20px 40px rgba(244, 63, 94, 0.1), 0 2px 6px rgba(0, 0, 0, 0.04);
-        }
+    #webgl-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+    }
 
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
+    #ui-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 10;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
 
-        .vinyl-spin {
-            animation: spin 3.5s linear infinite;
-        }
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 24px;
+      padding: 30px 40px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+      max-width: 90vw;
+      width: 440px;
+      opacity: 0;
+      transform: translateY(30px) scale(0.95);
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      position: absolute;
+      pointer-events: auto;
+    }
 
-        #noBtn {
-            transition: transform 0.15s ease-out;
-            will-change: transform;
-        }
+    .card.active {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
 
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #fbeef1;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #f472b6;
-            border-radius: 3px;
-        }
-    </style>
+    .card h2 {
+      font-size: 1.8rem;
+      color: #111;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    .card p {
+      font-size: 1.1rem;
+      color: #555;
+      line-height: 1.5;
+    }
+
+    .card .date-badge {
+      display: inline-block;
+      background: rgba(230, 57, 70, 0.1);
+      color: var(--primary);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .btn-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      margin-top: 25px;
+      position: relative;
+      min-height: 60px;
+    }
+
+    .btn {
+      padding: 12px 32px;
+      border-radius: 50px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+    }
+
+    .btn-yes {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 10px 20px rgba(230, 57, 70, 0.3);
+    }
+
+    .btn-yes:hover {
+      background: var(--primary-hover);
+      transform: scale(1.05);
+    }
+
+    .btn-no {
+      background: #e0e0e0;
+      color: #666;
+      position: absolute;
+      transition: all 0.2s ease-out;
+    }
+
+    .scroll-hint {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 20;
+      font-size: 0.9rem;
+      color: #888;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      animation: pulse 2s infinite;
+      pointer-events: none;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; transform: translate(-50%, 0); }
+      50% { opacity: 1; transform: translate(-50%, -6px); }
+    }
+
+    /* Interactive Record */
+    .record-container {
+      cursor: pointer;
+      display: inline-block;
+      margin-top: 20px;
+      transition: transform 0.3s;
+    }
+
+    .record-container:hover {
+      transform: scale(1.08) rotate(5deg);
+    }
+
+    .record {
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle, #333 18%, #111 20%, #111 40%, #222 41%, #111 42%, #111 60%, #222 61%, #111 62%);
+      border-radius: 50%;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: spin 4s linear infinite;
+      margin: 0 auto;
+    }
+
+    .record-center {
+      width: 40px;
+      height: 40px;
+      background: var(--accent);
+      border-radius: 50%;
+      border: 4px solid #fff;
+    }
+
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
-<body class="relative min-h-screen text-rose-950">
+<body>
 
-    <!-- 3D Canvas Background -->
-    <canvas id="webgl-canvas"></canvas>
+  <div id="webgl-container"></div>
 
-    <!-- Content Sections -->
-    <div id="scroll-container" class="relative z-10">
-
-        <!-- Start Header -->
-        <section class="h-screen flex flex-col justify-center items-center text-center px-4">
-            <div class="glass-card p-8 md:p-12 rounded-3xl max-w-xl mx-auto transform hover:scale-105 transition-all duration-300">
-                <span class="inline-block px-4 py-1.5 rounded-full bg-rose-200/80 text-rose-800 text-xs font-bold tracking-wider uppercase mb-4 border border-rose-300/60">
-                    Interaktive 3D Reise
-                </span>
-                <h1 class="text-4xl md:text-6xl font-extrabold text-rose-950 mb-4 tracking-tight">
-                    Unsere <span class="font-serif-italic font-normal text-rose-600">Reise</span>
-                </h1>
-                <p class="text-rose-800 text-sm md:text-base font-medium mb-8">
-                    Drehe am Scrollrad, um durch unsere gemeinsamen Erinnerungen und die Zukunft zu reisen.
-                </p>
-                <div class="animate-bounce flex flex-col items-center text-rose-500">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-                    </svg>
-                </div>
-            </div>
-        </section>
-
-        <!-- Station 1: Pfadfindercamp -->
-        <section class="h-screen flex items-center justify-center p-4">
-            <div class="glass-card p-8 rounded-3xl max-w-md w-full text-center">
-                <div class="text-5xl mb-3 filter drop-shadow">🧀</div>
-                <div class="text-rose-500 font-bold text-xs tracking-widest uppercase mb-1">11.07.2026</div>
-                <h2 class="text-2xl font-extrabold text-rose-950">Pfadfindercamp</h2>
-            </div>
-        </section>
-
-        <!-- Station 2: Vorletzter Abend -->
-        <section class="h-screen flex items-center justify-center p-4">
-            <div class="glass-card p-8 rounded-3xl max-w-md w-full text-center">
-                <div class="text-5xl mb-3 filter drop-shadow">❤️</div>
-                <div class="text-rose-500 font-bold text-xs tracking-widest uppercase mb-1">16.07.2026</div>
-                <h2 class="text-2xl font-extrabold text-rose-950">Zusammengekommen</h2>
-            </div>
-        </section>
-
-        <!-- Station 3: Abflug Irland -->
-        <section class="h-screen flex items-center justify-center p-4">
-            <div class="glass-card p-8 rounded-3xl max-w-md w-full text-center border-2 border-rose-300">
-                <div class="text-5xl mb-3 filter drop-shadow">✈️ 🇮🇪</div>
-                <div class="text-rose-500 font-bold text-xs tracking-widest uppercase mb-1">25.08.2026</div>
-                <h2 class="text-2xl font-extrabold text-rose-950">Flug nach Irland</h2>
-            </div>
-        </section>
-
-        <!-- Station 4: Herbstferien -->
-        <section class="h-screen flex items-center justify-center p-4">
-            <div class="glass-card p-8 rounded-3xl max-w-md w-full text-center">
-                <div class="text-5xl mb-3 filter drop-shadow">🎒 ✨</div>
-                <div class="text-rose-500 font-bold text-xs tracking-widest uppercase mb-1">Herbstferien</div>
-                <h2 class="text-2xl font-extrabold text-rose-950">Besuch in Irland</h2>
-            </div>
-        </section>
-
-        <!-- Decision Section (Locked Scroll until Yes) -->
-        <section id="question-section" class="h-screen flex items-center justify-center p-4 relative">
-            <div class="glass-card p-8 md:p-12 rounded-3xl max-w-lg w-full text-center relative z-20 shadow-2xl border-2 border-rose-300">
-                <div class="text-5xl mb-6 animate-pulse">💍</div>
-                <h2 class="text-2xl md:text-3xl font-extrabold text-rose-950 mb-8 leading-snug">
-                    Hast du kurz Zeit, den Rest deines Lebens mit mir zu teilen?
-                </h2>
-                
-                <div class="flex flex-col sm:flex-row items-center justify-center gap-6 relative min-h-[90px]" id="button-container">
-                    <button id="yesBtn" onclick="unlockJourney()" class="w-full sm:w-auto px-8 py-4 bg-rose-600 hover:bg-rose-700 text-white font-bold text-lg rounded-2xl shadow-xl shadow-rose-300 transform hover:scale-105 transition-all">
-                        Ja! ❤️
-                    </button>
-
-                    <button id="noBtn" class="w-full sm:w-auto px-8 py-4 bg-rose-100 text-rose-700 font-semibold text-lg rounded-2xl border border-rose-200 select-none">
-                        Nein 😜
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Future Journey (Hidden until Yes) -->
-        <div id="future-stages" class="hidden opacity-0 transition-opacity duration-1000">
-            <!-- Celebration -->
-            <section class="h-screen flex items-center justify-center p-4">
-                <div class="glass-card p-8 rounded-3xl max-w-lg w-full text-center border-2 border-rose-400 shadow-2xl">
-                    <div class="text-6xl mb-4 animate-bounce">🎉 🥰</div>
-                    <h2 class="text-3xl font-extrabold text-rose-950 mb-2">Awww du hast Ja gesagt!</h2>
-                    <p class="text-rose-600 text-lg font-bold">Ich freu mich so sehr! ❤️</p>
-                </div>
-            </section>
-
-            <!-- Future 1: Rückkehr nach Deutschland -->
-            <section class="h-screen flex items-center justify-center p-4">
-                <div class="glass-card p-8 rounded-3xl max-w-md w-full text-center">
-                    <div class="text-5xl mb-3 filter drop-shadow">🇩🇪 🏡</div>
-                    <div class="text-rose-500 font-bold text-xs tracking-widest uppercase mb-1">Willkommen Zuhause</div>
-                    <h2 class="text-2xl font-extrabold text-rose-950">Rückkehr nach Deutschland</h2>
-                </div>
-            </section>
-
-            <!-- Future 2: Erste gemeinsame Wohnung -->
-            <section class="h-screen flex items-center justify-center p-4">
-                <div class="glass-card p-8 rounded-3xl max-w-md w-full text-center">
-                    <div class="text-5xl mb-3 filter drop-shadow">🔑 🏠</div>
-                    <div class="text-rose-500 font-bold text-xs tracking-widest uppercase mb-1">Unser Zuhause</div>
-                    <h2 class="text-2xl font-extrabold text-rose-950">Erste gemeinsame Wohnung</h2>
-                </div>
-            </section>
-
-            <!-- Future 3: Erster gemeinsamer Urlaub -->
-            <section class="h-screen flex items-center justify-center p-4">
-                <div class="glass-card p-8 rounded-3xl max-w-md w-full text-center">
-                    <div class="text-5xl mb-3 filter drop-shadow">🧳 🌴</div>
-                    <div class="text-rose-500 font-bold text-xs tracking-widest uppercase mb-1">Abenteuer</div>
-                    <h2 class="text-2xl font-extrabold text-rose-950">Erster gemeinsamer Urlaub</h2>
-                </div>
-            </section>
-
-            <!-- Future 4: Hochzeit -->
-            <section class="h-screen flex items-center justify-center p-4">
-                <div class="glass-card p-8 rounded-3xl max-w-md w-full text-center border-2 border-rose-300">
-                    <div class="text-5xl mb-3 filter drop-shadow">💍 ✨</div>
-                    <div class="text-rose-500 font-bold text-xs tracking-widest uppercase mb-1">Für Immer</div>
-                    <h2 class="text-2xl font-extrabold text-rose-950">Unsere Hochzeit</h2>
-                </div>
-            </section>
-
-            <!-- Final Record Link Section -->
-            <section class="h-screen flex items-center justify-center p-4">
-                <div class="glass-card p-8 rounded-3xl max-w-md w-full text-center bg-white/80 border-2 border-rose-300 shadow-2xl flex flex-col items-center">
-                    <a href="https://music.amazon.de/tracks/B0FQK63NR6" target="_blank" rel="noopener noreferrer" class="group relative w-48 h-48 mb-6 flex items-center justify-center transition-transform transform hover:scale-110">
-                        <div class="w-48 h-48 rounded-full bg-slate-900 border-4 border-slate-800 shadow-2xl flex items-center justify-center vinyl-spin relative overflow-hidden">
-                            <div class="absolute inset-2 rounded-full border border-slate-700/40"></div>
-                            <div class="absolute inset-6 rounded-full border border-slate-800"></div>
-                            <div class="absolute inset-10 rounded-full border border-slate-700/40"></div>
-                            <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-rose-500 to-pink-500 flex items-center justify-center text-white text-xs font-bold shadow-md">
-                                ❤️
-                            </div>
-                        </div>
-                    </a>
-                    <span class="text-xs font-bold text-rose-500 uppercase tracking-widest">Klicke auf die Schallplatte 🎵</span>
-                </div>
-            </section>
-        </div>
-
+  <div id="ui-container">
+    <!-- Station 1 -->
+    <div class="card" id="card-0">
+      <div class="date-badge">11.07.2026</div>
+      <h2>Pfadfindercamp 🧀</h2>
     </div>
 
-    <script>
-        let isLocked = true;
-        const canvas = document.getElementById('webgl-canvas');
-        const scene = new THREE.Scene();
+    <!-- Station 2 -->
+    <div class="card" id="card-1">
+      <div class="date-badge">16.07.2026</div>
+      <h2>Vorletzter Abend ✨</h2>
+    </div>
 
-        scene.background = new THREE.Color(0xfbeef1);
-        scene.fog = new THREE.FogExp2(0xfbeef1, 0.015);
+    <!-- Station 3 -->
+    <div class="card" id="card-2">
+      <div class="date-badge">25.08.2026</div>
+      <h2>Flug nach Irland ✈️🇮🇪</h2>
+    </div>
 
-        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    <!-- Station 4 -->
+    <div class="card" id="card-3">
+      <div class="date-badge">Herbstferien</div>
+      <h2>Besuch 🎒❤️</h2>
+    </div>
 
-        // Lighting
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
-        scene.add(ambientLight);
+    <!-- Station 5: Die Frage (Scroll-Sperre) -->
+    <div class="card" id="card-question">
+      <h2>Hast du kurz Zeit, den Rest deines Lebens mit mir zu teilen?</h2>
+      <div class="btn-container" id="btn-area">
+        <button class="btn btn-yes" id="btn-yes">Ja! ❤️</button>
+        <button class="btn btn-no" id="btn-no">Nein</button>
+      </div>
+    </div>
 
-        const dirLight = new THREE.DirectionalLight(0xfff1f2, 1.2);
-        dirLight.position.set(10, 20, 10);
-        scene.add(dirLight);
+    <!-- Station 6: Freude & Zukunft -->
+    <div class="card" id="card-4">
+      <h2>Awww du hast Ja gesagt! Ich freu mich! ❤️</h2>
+    </div>
 
-        // Particle background
-        const particleCount = 250;
-        const particleGeo = new THREE.BufferGeometry();
-        const particlePos = new Float32Array(particleCount * 3);
+    <div class="card" id="card-5">
+      <h2>Rückkehr nach Deutschland 🇩🇪 🏡</h2>
+    </div>
 
-        for(let i = 0; i < particleCount * 3; i += 3) {
-            particlePos[i] = (Math.random() - 0.5) * 60;
-            particlePos[i+1] = (Math.random() - 0.5) * 60;
-            particlePos[i+2] = -Math.random() * 220;
+    <div class="card" id="card-6">
+      <h2>Erste gemeinsame Wohnung 🔑</h2>
+    </div>
+
+    <div class="card" id="card-7">
+      <h2>Erster gemeinsamer Urlaub 🧳🌴</h2>
+    </div>
+
+    <div class="card" id="card-8">
+      <h2>Hochzeit 💍✨</h2>
+    </div>
+
+    <!-- Station 9: Schallplatte -->
+    <div class="card" id="card-9">
+      <a href="https://music.amazon.de/tracks/B0FQK63NR6" target="_blank" style="text-decoration: none;">
+        <div class="record-container">
+          <div class="record">
+            <div class="record-center"></div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <div class="scroll-hint" id="scroll-hint">Scrollen zum Reisen</div>
+
+  <script>
+    // --- THREE.JS SCENE SETUP ---
+    const container = document.getElementById('webgl-container');
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xfbebf1);
+    scene.fog = new THREE.FogExp2(0xfbebf1, 0.018);
+
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.appendChild(renderer.domElement);
+
+    // --- LIGHTS ---
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+    scene.add(ambientLight);
+
+    const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    dirLight.position.set(20, 40, 20);
+    scene.add(dirLight);
+
+    const pointLight = new THREE.PointLight(0xffb6c1, 1, 50);
+    pointLight.position.set(0, 10, 0);
+    scene.add(pointLight);
+
+    // --- 3D OBJECT BUILDERS ---
+
+    // 1. Cheese Wedge 🧀
+    function createCheese() {
+      const group = new THREE.Group();
+      const shape = new THREE.Shape();
+      shape.moveTo(0, 0);
+      shape.lineTo(2, 0);
+      shape.lineTo(0, 3);
+      shape.closePath();
+
+      const extrudeSettings = { depth: 1.5, bevelEnabled: true, bevelSegments: 2, steps: 1, bevelSize: 0.05, bevelThickness: 0.05 };
+      const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+      const material = new THREE.MeshStandardMaterial({ color: 0xffcc00, roughness: 0.4 });
+      const mesh = new THREE.Mesh(geometry, material);
+      mesh.position.set(-1, -0.75, -0.75);
+      group.add(mesh);
+      return group;
+    }
+
+    // 2. Airplane ✈️
+    function createAirplane() {
+      const group = new THREE.Group();
+      const bodyGeo = new THREE.ConeGeometry(0.6, 3, 16);
+      const matWhite = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.2 });
+      const matRed = new THREE.MeshStandardMaterial({ color: 0xe63946 });
+
+      const fuselage = new THREE.Mesh(bodyGeo, matWhite);
+      fuselage.rotation.x = Math.PI / 2;
+      group.add(fuselage);
+
+      const wingGeo = new THREE.BoxGeometry(3.5, 0.08, 0.8);
+      const wings = new THREE.Mesh(wingGeo, matRed);
+      wings.position.set(0, 0, 0.2);
+      group.add(wings);
+
+      const tailGeo = new THREE.BoxGeometry(0.08, 0.8, 0.6);
+      const tail = new THREE.Mesh(tailGeo, matRed);
+      tail.position.set(0, 0.5, -1.2);
+      group.add(tail);
+
+      return group;
+    }
+
+    // 3. Heart ❤️
+    function createHeart() {
+      const shape = new THREE.Shape();
+      const x = 0, y = 0;
+      shape.moveTo(x + 0.5, y + 0.5);
+      shape.bezierCurveTo(x + 0.5, y + 0.5, x + 0.4, y, x, y);
+      shape.bezierCurveTo(x - 0.6, y, x - 0.6, y + 0.7, x - 0.6, y + 0.7);
+      shape.bezierCurveTo(x - 0.6, y + 1.1, x - 0.3, y + 1.54, x + 0.5, y + 1.9);
+      shape.bezierCurveTo(x + 1.3, y + 1.54, x + 1.6, y + 1.1, x + 1.6, y + 0.7);
+      shape.bezierCurveTo(x + 1.6, y, x + 1.0, y, x + 1.0, y);
+      shape.bezierCurveTo(x + 0.7, y, x + 0.5, y + 0.3, x + 0.5, y + 0.5);
+
+      const extrudeSettings = { depth: 0.4, bevelEnabled: true, bevelSegments: 3, steps: 1, bevelSize: 0.1, bevelThickness: 0.1 };
+      const geo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+      const mat = new THREE.MeshStandardMaterial({ color: 0xe63946, roughness: 0.2, metalness: 0.1 });
+      const mesh = new THREE.Mesh(geo, mat);
+      mesh.rotation.z = Math.PI;
+      mesh.rotation.x = Math.PI;
+      mesh.scale.set(1.2, 1.2, 1.2);
+      mesh.position.set(-0.6, 1.2, 0);
+      return mesh;
+    }
+
+    // 4. Hot Air Balloon 🎈
+    function createBalloon() {
+      const group = new THREE.Group();
+      const balloonGeo = new THREE.SphereGeometry(1.5, 32, 32);
+      balloonGeo.scale(1, 1.3, 1);
+      const balloonMat = new THREE.MeshStandardMaterial({ color: 0xff758f, roughness: 0.3 });
+      const balloon = new THREE.Mesh(balloonGeo, balloonMat);
+      group.add(balloon);
+
+      const basketGeo = new THREE.BoxGeometry(0.6, 0.5, 0.6);
+      const basketMat = new THREE.MeshStandardMaterial({ color: 0x8b5a2b });
+      const basket = new THREE.Mesh(basketGeo, basketMat);
+      basket.position.y = -2.3;
+      group.add(basket);
+
+      return group;
+    }
+
+    // 5. Wedding Rings 💍
+    function createRings() {
+      const group = new THREE.Group();
+      const ringGeo = new THREE.TorusGeometry(0.8, 0.12, 16, 100);
+      const ringMat = new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 0.8, roughness: 0.2 });
+
+      const ring1 = new THREE.Mesh(ringGeo, ringMat);
+      ring1.position.x = -0.5;
+      ring1.rotation.y = 0.4;
+
+      const ring2 = new THREE.Mesh(ringGeo, ringMat);
+      ring2.position.x = 0.5;
+      ring2.rotation.y = -0.4;
+
+      group.add(ring1);
+      group.add(ring2);
+      return group;
+    }
+
+    // --- SCENE STATIONS & PATH ---
+    const stations = [
+      { z: 0, obj: createCheese(), cardId: 'card-0' },
+      { z: -30, obj: null, cardId: 'card-1' },
+      { z: -60, obj: createAirplane(), cardId: 'card-2', isPlane: true },
+      { z: -90, obj: null, cardId: 'card-3' },
+      { z: -120, obj: createHeart(), cardId: 'card-question', isQuestion: true },
+      { z: -150, obj: null, cardId: 'card-4' },
+      { z: -180, obj: null, cardId: 'card-5' },
+      { z: -210, obj: null, cardId: 'card-6' },
+      { z: -240, obj: createBalloon(), cardId: 'card-7' },
+      { z: -270, obj: createRings(), cardId: 'card-8' },
+      { z: -300, obj: null, cardId: 'card-9' }
+    ];
+
+    let airplaneMesh = null;
+
+    stations.forEach((st, idx) => {
+      if (st.obj) {
+        st.obj.position.set(idx % 2 === 0 ? 2.5 : -2.5, 0, st.z - 5);
+        scene.add(st.obj);
+        if (st.isPlane) airplaneMesh = st.obj;
+      }
+    });
+
+    // Floating Particles
+    const particleGeo = new THREE.SphereGeometry(0.08, 8, 8);
+    const particleMat = new THREE.MeshBasicMaterial({ color: 0xffb3c1, transparent: true, opacity: 0.6 });
+    for (let i = 0; i < 150; i++) {
+      const p = new THREE.Mesh(particleGeo, particleMat);
+      p.position.set((Math.random() - 0.5) * 30, (Math.random() - 0.5) * 20, -Math.random() * 320);
+      scene.add(p);
+    }
+
+    // --- CONTROLS & ANIMATION ---
+    let targetZ = 0;
+    let currentZ = 0;
+    let questionAnswered = false;
+    const maxZ = 0;
+    const minZ = -300;
+    const questionZ = -120;
+
+    window.addEventListener('wheel', (e) => {
+      let delta = e.deltaY * 0.08;
+      let nextZ = targetZ - delta;
+
+      // Lock scrolling at Question if not answered
+      if (!questionAnswered && nextZ < questionZ) {
+        nextZ = questionZ;
+      }
+
+      targetZ = Math.max(minZ, Math.min(maxZ, nextZ));
+    });
+
+    // Touch support for Mobile
+    let touchStartY = 0;
+    window.addEventListener('touchstart', (e) => touchStartY = e.touches[0].clientY);
+    window.addEventListener('touchmove', (e) => {
+      let delta = (touchStartY - e.touches[0].clientY) * 0.15;
+      touchStartY = e.touches[0].clientY;
+      let nextZ = targetZ - delta;
+
+      if (!questionAnswered && nextZ < questionZ) {
+        nextZ = questionZ;
+      }
+      targetZ = Math.max(minZ, Math.min(maxZ, nextZ));
+    });
+
+    // --- INTERACTIVE "NEIN" BUTTON LOGIC ---
+    const btnNo = document.getElementById('btn-no');
+    const btnYes = document.getElementById('btn-yes');
+    const btnArea = document.getElementById('btn-area');
+
+    function moveNoButton(e) {
+      const areaRect = btnArea.getBoundingClientRect();
+      const mouseX = e ? e.clientX : areaRect.left + areaRect.width / 2;
+      const mouseY = e ? e.clientY : areaRect.top + areaRect.height / 2;
+
+      // Calculate max offset from center
+      const maxOffset = 120;
+      let randX = (Math.random() - 0.5) * maxOffset * 2;
+      let randY = (Math.random() - 0.5) * maxOffset * 2;
+
+      btnNo.style.transform = `translate(${randX}px, ${randY}px)`;
+    }
+
+    btnNo.addEventListener('mouseenter', moveNoButton);
+    btnNo.addEventListener('touchstart', (e) => { e.preventDefault(); moveNoButton(); });
+
+    btnYes.addEventListener('click', () => {
+      questionAnswered = true;
+      document.getElementById('card-question').classList.remove('active');
+      targetZ = -150; // Smoothly travel to next section
+    });
+
+    // --- RENDER LOOP ---
+    function animate() {
+      requestAnimationFrame(animate);
+
+      // Smooth Camera Movement
+      currentZ += (targetZ - currentZ) * 0.08;
+      camera.position.z = currentZ + 5;
+      camera.position.y = Math.sin(currentZ * 0.05) * 0.5;
+
+      // Airplane Realistic Takeoff Animation
+      if (airplaneMesh) {
+        let planeProgress = (currentZ - (-45)) / (-30); // Active window around z = -60
+        if (planeProgress > 0 && planeProgress < 2) {
+          airplaneMesh.position.z = -65 - planeProgress * 8;
+          airplaneMesh.position.y = Math.max(0, (planeProgress - 0.3) * 3);
+          airplaneMesh.rotation.x = planeProgress > 0.3 ? -0.25 : 0; // Tilt nose up
+          airplaneMesh.rotation.z = Math.sin(planeProgress * 2) * 0.1; // Gentle roll
         }
-        particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePos, 3));
-        const particleMat = new THREE.PointsMaterial({ color: 0xf472b6, size: 0.25, transparent: true, opacity: 0.6 });
-        const particles = new THREE.Points(particleGeo, particleMat);
-        scene.add(particles);
+      }
 
-        // 1. 3D Cheese Wedge
-        function createCheese() {
-            const group = new THREE.Group();
-            const shape = new THREE.Shape();
-            const r = 1.3;
-            const a = Math.PI / 3;
-            shape.moveTo(0,0);
-            shape.lineTo(r * Math.cos(-a/2), r * Math.sin(-a/2));
-            shape.arc(-r * Math.cos(-a/2), -r * Math.sin(-a/2), r, -a/2, a/2, false);
-            shape.lineTo(0,0);
+      // Card Visibility Check
+      stations.forEach((st) => {
+        const card = document.getElementById(st.cardId);
+        if (!card) return;
 
-            const wedgeGeo = new THREE.ExtrudeGeometry(shape, { depth: 0.8, bevelEnabled: true, bevelSize: 0.03, bevelThickness: 0.03 });
-            const wedgeMat = new THREE.MeshStandardMaterial({ color: 0xfacc15, roughness: 0.3, flatShading: true });
-            const wedge = new THREE.Mesh(wedgeGeo, wedgeMat);
-            wedge.rotation.x = -Math.PI / 2;
-            group.add(wedge);
-
-            const holeMat = new THREE.MeshStandardMaterial({ color: 0xeab308, roughness: 0.5 });
-            [[0.4, 0.1, 0.2, 0.15], [0.7, -0.1, 0.1, 0.18], [0.3, -0.2, 0.4, 0.12]].forEach(h => {
-                const hole = new THREE.Mesh(new THREE.SphereGeometry(h[3], 12, 12), holeMat);
-                hole.position.set(h[0], h[1], h[2]);
-                group.add(hole);
-            });
-            return group;
+        const dist = Math.abs(currentZ - st.z);
+        if (st.isQuestion && !questionAnswered) {
+          if (dist < 8) card.classList.add('active');
+          else card.classList.remove('active');
+        } else if (!st.isQuestion) {
+          if (dist < 8) card.classList.add('active');
+          else card.classList.remove('active');
         }
-        const cheeseMesh = createCheese();
-        cheeseMesh.position.set(-2, 0, -12);
-        scene.add(cheeseMesh);
+      });
 
-        // 2. 3D Airplane
-        function createPlane() {
-            const group = new THREE.Group();
-            const body = new THREE.Mesh(
-                new THREE.ConeGeometry(0.45, 3, 12),
-                new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.2 })
-            );
-            body.rotation.x = Math.PI / 2;
-            group.add(body);
+      // Hide scroll hint at the end
+      document.getElementById('scroll-hint').style.opacity = currentZ < -280 ? '0' : '1';
 
-            const wingShape = new THREE.Shape();
-            wingShape.moveTo(0, 0.7); wingShape.lineTo(2, -0.4); wingShape.lineTo(1.8, -0.7);
-            wingShape.lineTo(0, -0.2); wingShape.lineTo(-1.8, -0.7); wingShape.lineTo(-2, -0.4); wingShape.closePath();
-            
-            const wings = new THREE.Mesh(
-                new THREE.ExtrudeGeometry(wingShape, { depth: 0.05, bevelEnabled: false }),
-                new THREE.MeshStandardMaterial({ color: 0xf43f5e, roughness: 0.3 })
-            );
-            wings.rotation.x = Math.PI / 2;
-            group.add(wings);
-            return group;
-        }
-        const planeMesh = createPlane();
-        const planeBaseZ = -34;
-        planeMesh.position.set(0, -2, planeBaseZ);
-        scene.add(planeMesh);
+      renderer.render(scene, camera);
+    }
 
-        // 3. 3D Heart
-        function createHeart() {
-            const shape = new THREE.Shape();
-            shape.moveTo(0, 0);
-            shape.bezierCurveTo(0, 0.5, -0.8, 1.2, -1.5, 0.5);
-            shape.bezierCurveTo(-2.2, -0.3, -1.2, -1.2, 0, -2);
-            shape.bezierCurveTo(1.2, -1.2, 2.2, -0.3, 1.5, 0.5);
-            shape.bezierCurveTo(0.8, 1.2, 0, 0.5, 0, 0);
+    animate();
 
-            const heartGeo = new THREE.ExtrudeGeometry(shape, { depth: 0.5, bevelEnabled: true, bevelSegments: 3, steps: 1, bevelSize: 0.1, bevelThickness: 0.1 });
-            const heartMat = new THREE.MeshStandardMaterial({ color: 0xe11d48, roughness: 0.2, metalness: 0.1 });
-            const mesh = new THREE.Mesh(heartGeo, heartMat);
-            mesh.scale.set(0.6, 0.6, 0.6);
-            mesh.rotation.z = Math.PI;
-            return mesh;
-        }
-        const heartMesh = createHeart();
-        heartMesh.position.set(2, 1, -55);
-        scene.add(heartMesh);
-
-        // 4. 3D Hot Air Balloon
-        function createHotAirBalloon() {
-            const group = new THREE.Group();
-            const balloonGeo = new THREE.SphereGeometry(1.6, 24, 24);
-            const balloonMat = new THREE.MeshStandardMaterial({ color: 0xf43f5e, roughness: 0.3 });
-            const balloon = new THREE.Mesh(balloonGeo, balloonMat);
-            group.add(balloon);
-
-            const basketGeo = new THREE.BoxGeometry(0.6, 0.5, 0.6);
-            const basketMat = new THREE.MeshStandardMaterial({ color: 0x78350f, roughness: 0.8 });
-            const basket = new THREE.Mesh(basketGeo, basketMat);
-            basket.position.y = -2.2;
-            group.add(basket);
-
-            return group;
-        }
-        const balloonMesh = createHotAirBalloon();
-        balloonMesh.position.set(-3, 2, -110);
-        scene.add(balloonMesh);
-
-        // 5. 3D Wedding Rings
-        function createRings() {
-            const group = new THREE.Group();
-            const ringGeo = new THREE.TorusGeometry(0.7, 0.12, 16, 32);
-            const ringMat = new THREE.MeshStandardMaterial({ color: 0xfcbbf15, metalness: 0.9, roughness: 0.1 });
-            
-            const r1 = new THREE.Mesh(ringGeo, ringMat);
-            r1.position.x = -0.4;
-            const r2 = new THREE.Mesh(ringGeo, ringMat);
-            r2.position.x = 0.4;
-            r2.rotation.y = 0.5;
-
-            group.add(r1); group.add(r2);
-            return group;
-        }
-        const ringsMesh = createRings();
-        ringsMesh.position.set(0, 0, -135);
-        scene.add(ringsMesh);
-
-        let scrollProgress = 0;
-        const questionSection = document.getElementById('question-section');
-
-        function updateScroll() {
-            const questionTop = questionSection.offsetTop;
-            
-            if (isLocked && window.scrollY > questionTop) {
-                window.scrollTo(0, questionTop);
-            }
-
-            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-            scrollProgress = maxScroll > 0 ? window.scrollY / maxScroll : 0;
-        }
-
-        window.addEventListener('scroll', updateScroll);
-
-        function animate() {
-            requestAnimationFrame(animate);
-
-            // Cheese animation
-            cheeseMesh.rotation.y += 0.008;
-
-            // Heart pulse
-            const pulse = 1 + Math.sin(Date.now() * 0.004) * 0.1;
-            heartMesh.scale.set(0.6 * pulse, 0.6 * pulse, 0.6 * pulse);
-            heartMesh.rotation.y += 0.01;
-
-            // Balloon float
-            balloonMesh.position.y = 2 + Math.sin(Date.now() * 0.002) * 0.4;
-            balloonMesh.rotation.y += 0.005;
-
-            // Rings rotation
-            ringsMesh.rotation.y += 0.01;
-
-            // Camera Trajectory
-            const totalZSpan = isLocked ? 65 : 150;
-            const targetCamZ = -scrollProgress * totalZSpan;
-            camera.position.z += (targetCamZ - camera.position.z) * 0.08;
-            camera.position.y = Math.sin(scrollProgress * Math.PI * 2) * 0.3;
-
-            // Airplane Takeoff logic
-            if (scrollProgress >= 0.25 && scrollProgress <= 0.55) {
-                const fly = (scrollProgress - 0.25) / 0.3;
-                planeMesh.position.z = planeBaseZ - fly * 25;
-                planeMesh.position.y = -2 + Math.pow(fly, 1.2) * 12;
-                planeMesh.rotation.x = -0.3 * Math.sin(fly * Math.PI * 0.8);
-            } else {
-                planeMesh.position.set(0, -2, planeBaseZ);
-            }
-
-            particles.rotation.y += 0.0003;
-            renderer.render(scene, camera);
-        }
-
-        const noBtn = document.getElementById('noBtn');
-
-        function evadeMouse(e) {
-            const maxRadius = 130;
-            const mouseX = e.clientX || (e.touches && e.touches[0].clientX) || window.innerWidth / 2;
-            const mouseY = e.clientY || (e.touches && e.touches[0].clientY) || window.innerHeight / 2;
-
-            const rect = noBtn.getBoundingClientRect();
-            const btnX = rect.left + rect.width / 2;
-            const btnY = rect.top + rect.height / 2;
-
-            let dx = btnX - mouseX;
-            let dy = btnY - mouseY;
-            let len = Math.sqrt(dx * dx + dy * dy) || 1;
-
-            let targetX = (dx / len) * maxRadius;
-            let targetY = (dy / len) * (maxRadius * 0.5);
-
-            noBtn.style.transform = `translate(${targetX}px, ${targetY}px)`;
-        }
-
-        noBtn.addEventListener('mousemove', evadeMouse);
-        noBtn.addEventListener('mouseenter', evadeMouse);
-        noBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            evadeMouse(e);
-        });
-
-        function unlockJourney() {
-            isLocked = false;
-            const futureStages = document.getElementById('future-stages');
-            futureStages.classList.remove('hidden');
-
-            setTimeout(() => {
-                futureStages.classList.remove('opacity-0');
-                window.scrollBy({
-                    top: window.innerHeight * 0.8,
-                    behavior: 'smooth'
-                });
-            }, 50);
-        }
-
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-
-        window.onload = function() {
-            updateScroll();
-            animate();
-        };
-    </script>
+    // Resize Handler
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
 </body>
 </html>
