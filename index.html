@@ -335,21 +335,21 @@
         function createCheese() {
             const group = new THREE.Group();
             const shape = new THREE.Shape();
-            const r = 1.3;
-            const a = Math.PI / 3;
+            const r = 1.8;
+            const a = Math.PI / 2.5;
             shape.moveTo(0,0);
             shape.lineTo(r * Math.cos(-a/2), r * Math.sin(-a/2));
             shape.arc(-r * Math.cos(-a/2), -r * Math.sin(-a/2), r, -a/2, a/2, false);
             shape.lineTo(0,0);
 
-            const wedgeGeo = new THREE.ExtrudeGeometry(shape, { depth: 0.8, bevelEnabled: true, bevelSize: 0.03, bevelThickness: 0.03 });
-            const wedgeMat = new THREE.MeshStandardMaterial({ color: 0xfacc15, roughness: 0.3, flatShading: true });
+            const wedgeGeo = new THREE.ExtrudeGeometry(shape, { depth: 1.2, bevelEnabled: true, bevelSize: 0.05, bevelThickness: 0.05 });
+            const wedgeMat = new THREE.MeshStandardMaterial({ color: 0xfacc15, roughness: 0.3, flatShading: false });
             const wedge = new THREE.Mesh(wedgeGeo, wedgeMat);
             wedge.rotation.x = -Math.PI / 2;
             group.add(wedge);
 
-            const holeMat = new THREE.MeshStandardMaterial({ color: 0xeab308, roughness: 0.5 });
-            [[0.4, 0.1, 0.2, 0.15], [0.7, -0.1, 0.1, 0.18], [0.3, -0.2, 0.4, 0.12]].forEach(h => {
+            const holeMat = new THREE.MeshStandardMaterial({ color: 0xca8a04, roughness: 0.5 });
+            [[0.5, 0.2, 0.4, 0.2], [0.9, -0.2, 0.3, 0.25], [0.4, -0.4, 0.6, 0.15]].forEach(h => {
                 const hole = new THREE.Mesh(new THREE.SphereGeometry(h[3], 12, 12), holeMat);
                 hole.position.set(h[0], h[1], h[2]);
                 group.add(hole);
@@ -477,11 +477,12 @@
             camera.position.z += (targetCamZ - camera.position.z) * 0.08;
             camera.position.y = Math.sin(scrollProgress * Math.PI * 2) * 0.3;
 
-            if (scrollProgress >= 0.3 && scrollProgress <= 0.6) {
-                const fly = (scrollProgress - 0.3) / 0.3;
-                planeMesh.position.z = planeBaseZ - fly * 30;
-                planeMesh.position.y = -2 + Math.pow(fly, 1.2) * 14;
-                planeMesh.rotation.x = -0.3 * Math.sin(fly * Math.PI * 0.8);
+            // Fix für das Flugzeug: Fließende Animation basierend auf Scroll-Fortschritt
+            const planeProgress = Math.max(0, Math.min(1, (scrollProgress - 0.25) / 0.35));
+            if (planeProgress > 0) {
+                planeMesh.position.z = planeBaseZ - planeProgress * 30;
+                planeMesh.position.y = -2 + Math.pow(planeProgress, 1.2) * 14;
+                planeMesh.rotation.x = -0.3 * Math.sin(planeProgress * Math.PI * 0.8);
             } else {
                 planeMesh.position.set(0, -2, planeBaseZ);
             }
