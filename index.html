@@ -116,7 +116,7 @@
                 
                 <!-- Foto-Container -->
                 <div class="rounded-2xl overflow-hidden shadow-lg border-2 border-white mb-4 bg-rose-100 flex items-center justify-center relative">
-                    <img id="galleryImage" src="https://i.ibb.co/SD6pGSq7/bild.jpg" alt="Foto Galerie" class="w-full h-auto object-contain max-h-[45vh] transition-opacity duration-300">
+                    <img id="galleryImage" src="images/WhatsApp Image 2026-09-22 at 22.36.20(1).jpeg" alt="Foto Galerie" class="w-full h-auto object-contain max-h-[45vh] transition-opacity duration-300">
                 </div>
 
                 <!-- Navigations-Buttons -->
@@ -124,7 +124,7 @@
                     <button onclick="prevImage()" class="flex-1 px-4 py-2 bg-rose-200 hover:bg-rose-300 text-rose-900 font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-sm">
                         ← Zurück
                     </button>
-                    <span id="imageCounter" class="text-xs font-bold text-rose-700">1 / 3</span>
+                    <span id="imageCounter" class="text-xs font-bold text-rose-700">1 / 6</span>
                     <button onclick="nextImage()" class="flex-1 px-4 py-2 bg-rose-500 hover:bg-rose-600 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-md">
                         Weiter →
                     </button>
@@ -265,11 +265,14 @@
     </div>
 
     <script>
-        // --- FOTO-GALERIE LOGIK ---
+        // --- FOTO-GALERIE LOGIK (Bilder direkt aus dem 'images' Ordner im Repo) ---
         const galleryImages = [
-            "https://i.ibb.co/SD6pGSq7/bild.jpg", 
-            "https://i.ibb.co/wFNS2bmY/bild.jpg", 
-            "https://i.ibb.co/rGK4Y54K/bild.jpg"  
+            "images/WhatsApp Image 2026-09-22 at 22.36.20(1).jpeg",
+            "images/WhatsApp Image 2026-09-22 at 22.36.20.jpeg",
+            "images/WhatsApp Image 2026-09-22 at 22.36.21(1).jpeg",
+            "images/WhatsApp Image 2026-09-22 at 22.36.21.jpeg",
+            "images/WhatsApp Image 2026-09-22 at 22.37.42.jpeg",
+            "images/WhatsApp Image 2026-09-22 at 22.39.50(1).jpeg"
         ];
         let currentImageIndex = 0;
 
@@ -393,7 +396,6 @@
             const heartMat = new THREE.MeshStandardMaterial({ color: 0xe11d48, roughness: 0.2, metalness: 0.1 });
             const mesh = new THREE.Mesh(heartGeo, heartMat);
             mesh.scale.set(0.6, 0.6, 0.6);
-            // Herz korrekt aufrecht gedreht (Rücksetzung auf Math.PI, damit die Bögen oben und die Spitze unten sind)
             mesh.rotation.z = Math.PI;
             return mesh;
         }
