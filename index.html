@@ -8,6 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Three.js for 3D Graphics -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Canvas Confetti for celebration -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
     
@@ -36,11 +38,11 @@
         }
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.65);
+            background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.9);
-            box-shadow: 0 20px 40px rgba(244, 63, 94, 0.1), 0 2px 6px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 20px 40px rgba(244, 63, 94, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04);
         }
 
         @keyframes spin {
@@ -103,6 +105,21 @@
                 <div class="text-5xl mb-3 filter drop-shadow">🧀</div>
                 <div class="text-rose-500 font-bold text-xs tracking-widest uppercase mb-1">11.07.2026</div>
                 <h2 class="text-2xl font-extrabold text-rose-950">Pfadfindercamp</h2>
+                <p class="text-rose-700/80 text-sm mt-2">Wo alles anfing und der Käse im Spiel war...</p>
+            </div>
+        </section>
+
+        <!-- NEUE FOTO-STATION: Unsere Erinnerungen -->
+        <section class="h-screen flex items-center justify-center p-4">
+            <div class="glass-card p-6 md:p-8 rounded-3xl max-w-md w-full text-center border border-rose-300">
+                <div class="text-rose-500 font-bold text-xs tracking-widest uppercase mb-2">Unsere Momente</div>
+                <h2 class="text-2xl font-extrabold text-rose-950 mb-4">Unvergesslich ❤️</h2>
+                
+                <!-- Foto-Container (Hier ist dein Bild eingebunden) -->
+                <div class="rounded-2xl overflow-hidden shadow-lg border-2 border-white mb-4 max-h-64 flex items-center justify-center bg-rose-100">
+                    <img src="https://i.ibb.co/rGK4Y54K/bild.jpg" alt="Unser Moment" class="w-full h-full object-cover">
+                </div>
+                <p class="text-rose-800 text-xs font-medium">Jeder Augenblick mit dir ist etwas ganz Besonderes.</p>
             </div>
         </section>
 
@@ -112,6 +129,22 @@
                 <div class="text-5xl mb-3 filter drop-shadow">❤️</div>
                 <div class="text-rose-500 font-bold text-xs tracking-widest uppercase mb-1">16.07.2026</div>
                 <h2 class="text-2xl font-extrabold text-rose-950">Zusammengekommen</h2>
+                <p class="text-rose-700/80 text-sm mt-2">Der unvergessliche Moment am vorletzten Abend.</p>
+            </div>
+        </section>
+
+        <!-- Station Mini-Orakel (Gründe warum ich dich liebe) -->
+        <section class="h-screen flex items-center justify-center p-4">
+            <div class="glass-card p-8 rounded-3xl max-w-md w-full text-center border border-rose-300">
+                <div class="text-4xl mb-2">💡💖</div>
+                <div class="text-rose-500 font-bold text-xs tracking-widest uppercase mb-1">Kleine Liebeserklärung</div>
+                <h2 class="text-xl font-extrabold text-rose-950 mb-4">Warum du einfach toll bist:</h2>
+                <div id="loveReason" class="bg-white/60 p-4 rounded-2xl text-rose-900 font-medium text-sm mb-4 min-h-[60px] flex items-center justify-center border border-rose-100">
+                    Klicke auf den Button für eine kleine Überraschung! 👇
+                </div>
+                <button onclick="nextReason()" class="px-5 py-2.5 bg-rose-500 hover:bg-rose-600 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-md transition-all">
+                    Nächster Grund ✨
+                </button>
             </div>
         </section>
 
@@ -121,6 +154,7 @@
                 <div class="text-5xl mb-3 filter drop-shadow">✈️ 🇮🇪</div>
                 <div class="text-rose-500 font-bold text-xs tracking-widest uppercase mb-1">25.08.2026</div>
                 <h2 class="text-2xl font-extrabold text-rose-950">Flug nach Irland</h2>
+                <p class="text-rose-700/80 text-sm mt-2">Abenteuer auf der grünen Insel.</p>
             </div>
         </section>
 
@@ -130,6 +164,7 @@
                 <div class="text-5xl mb-3 filter drop-shadow">🎒 ✨</div>
                 <div class="text-rose-500 font-bold text-xs tracking-widest uppercase mb-1">Herbstferien</div>
                 <h2 class="text-2xl font-extrabold text-rose-950">Besuch in Irland</h2>
+                <p class="text-rose-700/80 text-sm mt-2">Wiedersehen und gemeinsame Zeit genießen.</p>
             </div>
         </section>
 
@@ -242,17 +277,17 @@
         scene.add(dirLight);
 
         // Particle background
-        const particleCount = 250;
+        const particleCount = 300;
         const particleGeo = new THREE.BufferGeometry();
         const particlePos = new Float32Array(particleCount * 3);
 
         for(let i = 0; i < particleCount * 3; i += 3) {
-            particlePos[i] = (Math.random() - 0.5) * 60;
-            particlePos[i+1] = (Math.random() - 0.5) * 60;
-            particlePos[i+2] = -Math.random() * 220;
+            particlePos[i] = (Math.random() - 0.5) * 70;
+            particlePos[i+1] = (Math.random() - 0.5) * 70;
+            particlePos[i+2] = -Math.random() * 250;
         }
         particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePos, 3));
-        const particleMat = new THREE.PointsMaterial({ color: 0xf472b6, size: 0.25, transparent: true, opacity: 0.6 });
+        const particleMat = new THREE.PointsMaterial({ color: 0xf472b6, size: 0.3, transparent: true, opacity: 0.6 });
         const particles = new THREE.Points(particleGeo, particleMat);
         scene.add(particles);
 
@@ -308,7 +343,7 @@
             return group;
         }
         const planeMesh = createPlane();
-        const planeBaseZ = -34;
+        const planeBaseZ = -50;
         planeMesh.position.set(0, -2, planeBaseZ);
         scene.add(planeMesh);
 
@@ -329,7 +364,7 @@
             return mesh;
         }
         const heartMesh = createHeart();
-        heartMesh.position.set(2, 1, -55);
+        heartMesh.position.set(2, 1, -75);
         scene.add(heartMesh);
 
         // 4. 3D Hot Air Balloon
@@ -349,14 +384,14 @@
             return group;
         }
         const balloonMesh = createHotAirBalloon();
-        balloonMesh.position.set(-3, 2, -110);
+        balloonMesh.position.set(-3, 2, -130);
         scene.add(balloonMesh);
 
         // 5. 3D Wedding Rings
         function createRings() {
             const group = new THREE.Group();
             const ringGeo = new THREE.TorusGeometry(0.7, 0.12, 16, 32);
-            const ringMat = new THREE.MeshStandardMaterial({ color: 0xfcbbf15, metalness: 0.9, roughness: 0.1 });
+            const ringMat = new THREE.MeshStandardMaterial({ color: 0xfacc15, metalness: 0.9, roughness: 0.1 });
             
             const r1 = new THREE.Mesh(ringGeo, ringMat);
             r1.position.x = -0.4;
@@ -368,7 +403,7 @@
             return group;
         }
         const ringsMesh = createRings();
-        ringsMesh.position.set(0, 0, -135);
+        ringsMesh.position.set(0, 0, -165);
         scene.add(ringsMesh);
 
         let scrollProgress = 0;
@@ -390,32 +425,26 @@
         function animate() {
             requestAnimationFrame(animate);
 
-            // Cheese animation
             cheeseMesh.rotation.y += 0.008;
 
-            // Heart pulse
             const pulse = 1 + Math.sin(Date.now() * 0.004) * 0.1;
             heartMesh.scale.set(0.6 * pulse, 0.6 * pulse, 0.6 * pulse);
             heartMesh.rotation.y += 0.01;
 
-            // Balloon float
             balloonMesh.position.y = 2 + Math.sin(Date.now() * 0.002) * 0.4;
             balloonMesh.rotation.y += 0.005;
 
-            // Rings rotation
             ringsMesh.rotation.y += 0.01;
 
-            // Camera Trajectory
-            const totalZSpan = isLocked ? 65 : 150;
+            const totalZSpan = isLocked ? 75 : 180;
             const targetCamZ = -scrollProgress * totalZSpan;
             camera.position.z += (targetCamZ - camera.position.z) * 0.08;
             camera.position.y = Math.sin(scrollProgress * Math.PI * 2) * 0.3;
 
-            // Airplane Takeoff logic
-            if (scrollProgress >= 0.25 && scrollProgress <= 0.55) {
-                const fly = (scrollProgress - 0.25) / 0.3;
-                planeMesh.position.z = planeBaseZ - fly * 25;
-                planeMesh.position.y = -2 + Math.pow(fly, 1.2) * 12;
+            if (scrollProgress >= 0.3 && scrollProgress <= 0.6) {
+                const fly = (scrollProgress - 0.3) / 0.3;
+                planeMesh.position.z = planeBaseZ - fly * 30;
+                planeMesh.position.y = -2 + Math.pow(fly, 1.2) * 14;
                 planeMesh.rotation.x = -0.3 * Math.sin(fly * Math.PI * 0.8);
             } else {
                 planeMesh.position.set(0, -2, planeBaseZ);
@@ -453,8 +482,37 @@
             evadeMouse(e);
         });
 
+        // Liebesgründe-Orakel Array
+        const reasons = [
+            "Dein Lachen bringt einfach jeden Raum zum Strahlen. 😊",
+            "Weil du meine Lieblingsmensch-Ansprechpartnerin für jeden Blödsinn bist. 🧀",
+            "Wie du die Dinge anpackst und mich jedes Mal aufs Neue inspirierst.",
+            "Weil du selbst an grauen Tagen sofort die Sonne für mich rausholst. ☀️",
+            "Weil die Zeit mit dir sich jedes Mal anfühlt wie nach Hause kommen. 🏡"
+        ];
+        let reasonIndex = 0;
+        function nextReason() {
+            const box = document.getElementById('loveReason');
+            box.style.opacity = 0;
+            setTimeout(() => {
+                box.innerText = reasons[reasonIndex];
+                box.style.opacity = 1;
+                reasonIndex = (reasonIndex + 1) % reasons.length;
+            }, 150);
+        }
+        document.getElementById('loveReason').style.transition = 'opacity 0.15s ease-in-out';
+
         function unlockJourney() {
             isLocked = false;
+            
+            // Konfetti-Effekt zünden!
+            confetti({
+                particleCount: 120,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#f43f5e', '#fb7185', '#fda4af', '#facc15']
+            });
+
             const futureStages = document.getElementById('future-stages');
             futureStages.classList.remove('hidden');
 
