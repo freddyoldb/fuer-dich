@@ -45,12 +45,6 @@
             box-shadow: 0 20px 40px rgba(244, 63, 94, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04);
         }
 
-        /* Schärfere Bildwiedergabe gegen Verpixelung */
-        #galleryImage {
-            image-rendering: -webkit-optimize-contrast;
-            image-rendering: crisp-edges;
-        }
-
         @keyframes spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
@@ -283,7 +277,6 @@
             const imgElement = document.getElementById('galleryImage');
             const counterElement = document.getElementById('imageCounter');
             
-            // Sanfter Fade-Effekt beim Wechsel
             imgElement.style.opacity = 0;
             setTimeout(() => {
                 imgElement.src = galleryImages[currentImageIndex];
@@ -302,7 +295,6 @@
             updateGallery();
         }
 
-        // Übergangseffekt für das Bild vorbereiten
         document.getElementById('galleryImage').style.transition = 'opacity 0.15s ease-in-out';
 
 
@@ -319,7 +311,6 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-        // Lighting
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
         scene.add(ambientLight);
 
@@ -327,7 +318,6 @@
         dirLight.position.set(10, 20, 10);
         scene.add(dirLight);
 
-        // Particle background
         const particleCount = 300;
         const particleGeo = new THREE.BufferGeometry();
         const particlePos = new Float32Array(particleCount * 3);
@@ -342,7 +332,6 @@
         const particles = new THREE.Points(particleGeo, particleMat);
         scene.add(particles);
 
-        // 1. 3D Cheese Wedge
         function createCheese() {
             const group = new THREE.Group();
             const shape = new THREE.Shape();
@@ -371,7 +360,6 @@
         cheeseMesh.position.set(-2, 0, -12);
         scene.add(cheeseMesh);
 
-        // 2. 3D Airplane
         function createPlane() {
             const group = new THREE.Group();
             const body = new THREE.Mesh(
@@ -398,7 +386,6 @@
         planeMesh.position.set(0, -2, planeBaseZ);
         scene.add(planeMesh);
 
-        // 3. 3D Heart
         function createHeart() {
             const shape = new THREE.Shape();
             shape.moveTo(0, 0);
@@ -418,7 +405,6 @@
         heartMesh.position.set(2, 1, -75);
         scene.add(heartMesh);
 
-        // 4. 3D Hot Air Balloon
         function createHotAirBalloon() {
             const group = new THREE.Group();
             const balloonGeo = new THREE.SphereGeometry(1.6, 24, 24);
@@ -438,7 +424,6 @@
         balloonMesh.position.set(-3, 2, -130);
         scene.add(balloonMesh);
 
-        // 5. 3D Wedding Rings
         function createRings() {
             const group = new THREE.Group();
             const ringGeo = new THREE.TorusGeometry(0.7, 0.12, 16, 32);
@@ -533,7 +518,6 @@
             evadeMouse(e);
         });
 
-        // Liebesgründe-Orakel Array
         const reasons = [
             "Dein Lachen bringt einfach jeden Raum zum Strahlen. 😊",
             "Weil du meine Lieblingsmensch-Ansprechpartnerin für jeden Blödsinn bist. 🧀",
