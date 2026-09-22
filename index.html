@@ -138,16 +138,6 @@
             </div>
         </section>
 
-        <!-- Station: Das Baumhaus-Abenteuer (NEU) -->
-        <section class="h-screen flex items-center justify-center p-4">
-            <div class="glass-card p-8 rounded-3xl max-w-md w-full text-center">
-                <div class="text-5xl mb-3 filter drop-shadow">🌿🪢</div>
-                <div class="text-rose-500 font-bold text-xs tracking-widest uppercase mb-1">Sommer-Vibes</div>
-                <h2 class="text-2xl font-extrabold text-rose-950">Unser Baumhaus</h2>
-                <p class="text-rose-700/80 text-sm mt-2">Unzählige Stunden, Seile, Umbau-Aktionen und perfekte Sommernachmittage.</p>
-            </div>
-        </section>
-
         <!-- Station 2: Vorletzter Abend -->
         <section class="h-screen flex items-center justify-center p-4">
             <div class="glass-card p-8 rounded-3xl max-w-md w-full text-center">
@@ -173,7 +163,7 @@
             </div>
         </section>
 
-        <!-- Station: Gemeinsame Lieblingsmomente (NEU) -->
+        <!-- Station: Gemeinsame Lieblingsmomente -->
         <section class="h-screen flex items-center justify-center p-4">
             <div class="glass-card p-8 rounded-3xl max-w-md w-full text-center">
                 <div class="text-5xl mb-3 filter drop-shadow">🎵✨</div>
@@ -357,14 +347,14 @@
         dirLight.position.set(10, 20, 10);
         scene.add(dirLight);
 
-        const particleCount = 400; // Etwas mehr Partikel für die längere Reise
+        const particleCount = 350;
         const particleGeo = new THREE.BufferGeometry();
         const particlePos = new Float32Array(particleCount * 3);
 
         for(let i = 0; i < particleCount * 3; i += 3) {
             particlePos[i] = (Math.random() - 0.5) * 70;
             particlePos[i+1] = (Math.random() - 0.5) * 70;
-            particlePos[i+2] = -Math.random() * 300; // Längeres Feld für mehr Stationen
+            particlePos[i+2] = -Math.random() * 260;
         }
         particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePos, 3));
         const particleMat = new THREE.PointsMaterial({ color: 0xf472b6, size: 0.3, transparent: true, opacity: 0.6 });
@@ -432,7 +422,8 @@
             const heartMat = new THREE.MeshStandardMaterial({ color: 0xe11d48, roughness: 0.2, metalness: 0.1 });
             const mesh = new THREE.Mesh(heartGeo, heartMat);
             mesh.scale.set(0.6, 0.6, 0.6);
-            mesh.rotation.z = Math.PI;
+            // Korrigierte Rotation, damit das Herz absolut richtig herum steht
+            mesh.rotation.x = Math.PI; 
             return mesh;
         }
         const heartMesh = createHeart();
@@ -473,7 +464,7 @@
             return group;
         }
         const ringsMesh = createRings();
-        ringsMesh.position.set(0, 0, -200); // Weiter nach hinten gesetzt für die längere Sektion
+        ringsMesh.position.set(0, 0, -180);
         scene.add(ringsMesh);
 
         let scrollProgress = 0;
@@ -506,7 +497,7 @@
 
             ringsMesh.rotation.y += 0.01;
 
-            const totalZSpan = isLocked ? 75 : 220; // Angepasst an die veränderte Streckenlänge
+            const totalZSpan = isLocked ? 75 : 200;
             const targetCamZ = -scrollProgress * totalZSpan;
             camera.position.z += (targetCamZ - camera.position.z) * 0.08;
             camera.position.y = Math.sin(scrollProgress * Math.PI * 2) * 0.3;
